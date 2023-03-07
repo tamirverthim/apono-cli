@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '**.md'
+    tags-ignore:
+      - 'v*' # Don't run CI tests on release tags
+  pull_request:
+    branches: [main]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3.3.0
+
+      - name: Set up Go
+        uses: actions/setup-go@v3.5.0
+        with:
+          go-version-file: 'go.mod'
+
+      - name: Build
+        run: make ci
+
+      - name: Upload coverage
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage
+          path: coverage.*
+
+      - run: goreleaser release --rm-dist --snapshot
+
+      - name: Upload dist
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: dist
