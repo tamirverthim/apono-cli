@@ -3,6 +3,8 @@ package commands
 import (
 	"fmt"
 
+	"github.com/apono-io/apono-cli/pkg/aponoapi"
+
 	"github.com/spf13/cobra"
 
 	"github.com/apono-io/apono-cli/pkg/config"
@@ -27,11 +29,11 @@ func Logout() *cobra.Command {
 			}
 
 			if authConfig.Profiles == nil {
-				return ErrProfileNotExists
+				return aponoapi.ErrProfileNotExists
 			}
 
 			if _, exists := authConfig.Profiles[pn]; !exists {
-				return ErrProfileNotExists
+				return aponoapi.ErrProfileNotExists
 			}
 			delete(authConfig.Profiles, pn)
 
